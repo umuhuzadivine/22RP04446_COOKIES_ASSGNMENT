@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Username or Email</title>
+    <script>
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        // Function to get a cookie by name
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Function to handle form submission
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            const userInput = document.getElementById('userInput').value;
+            if (userInput) {
+                setCookie('user', userInput, 7); // Store cookie for 7 days
+                alert('Data saved!');
+                // Optionally reload the page to show the updated cookie value
+                location.reload();
+            }
+        }
+
+        // Function to initialize the form with cookie value on page load
+        function initializeForm() {
+            const userValue = getCookie('user');
+            if (userValue) {
+                document.getElementById('userInput').value = userValue;
+            }
+        }
+
+        // Add event listener to initialize the form and handle form submission
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeForm();
+            document.getElementById('userForm').addEventListener('submit', handleSubmit);
+        });
+    </script>
+</head>
+<body>
+    <h1>Enter your Username or Email</h1>
+    <form id="userForm" action="/user" method="post">
+        <label for="userInput">Username/Email:</label>
+        <input type="text" id="userInput" name="userInput">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
